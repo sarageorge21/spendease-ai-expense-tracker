@@ -91,50 +91,52 @@ export default function Sidebar() {
 
   const sidebarContent = (
     <>
-      <div style={s.logo}>
-        <div style={s.logoMark}>💸</div>
+      <div style={{ ...s.logo, padding: isMobile ? '14px 16px 12px' : s.logo.padding }}>
+        <div style={{ ...s.logoMark, width: isMobile ? 28 : 34, height: isMobile ? 28 : 34, fontSize: isMobile ? 14 : 18 }}>💸</div>
         <div>
-          <div style={s.logoText}>Spendease</div>
+          <div style={{ ...s.logoText, fontSize: isMobile ? '0.9rem' : '1rem' }}>Spendease</div>
           <div style={s.logoSub}>AI Finance Pro</div>
         </div>
         {isMobile && (
           <button
             onClick={() => setMobileOpen(false)}
-            style={{ marginLeft: 'auto', background: 'transparent', color: 'var(--text-3)', fontSize: 20, padding: '4px 8px', borderRadius: 6, cursor: 'pointer', border: 'none' }}
+            style={{ marginLeft: 'auto', background: 'transparent', color: 'var(--text-3)', fontSize: 18, padding: '2px 6px', borderRadius: 6, cursor: 'pointer', border: 'none' }}
           >✕</button>
         )}
       </div>
 
-      <nav style={s.nav}>
+      <nav style={{ ...s.nav, padding: isMobile ? '8px 8px' : s.nav.padding, gap: isMobile ? 1 : 2 }}>
         {NAV.map(({ to, icon, label }) => (
           <NavLink
             key={to} to={to}
             style={({ isActive }) => ({
               ...s.navLink,
+              padding: isMobile ? '7px 10px' : s.navLink.padding,
+              fontSize: isMobile ? '0.82rem' : s.navLink.fontSize,
               background: isActive ? 'var(--accent-glow)' : 'transparent',
               color: isActive ? 'var(--accent-2)' : 'var(--text-2)',
               borderLeft: isActive ? '2px solid var(--accent)' : '2px solid transparent',
             })}
           >
-            <span style={s.navIcon}>{icon}</span>
+            <span style={{ ...s.navIcon, fontSize: isMobile ? 14 : 16 }}>{icon}</span>
             {label}
           </NavLink>
         ))}
       </nav>
 
-      <div style={s.bottom}>
-        <div style={s.userWrap}
+      <div style={{ ...s.bottom, padding: isMobile ? '8px 8px' : s.bottom.padding }}>
+        <div style={{ ...s.userWrap, padding: isMobile ? '8px 10px' : s.userWrap.padding }}
           onMouseEnter={e => e.currentTarget.style.background = 'var(--raised)'}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
         >
-          <div style={s.avatar}>{user?.name?.[0]?.toUpperCase() || 'U'}</div>
+          <div style={{ ...s.avatar, width: isMobile ? 28 : 32, height: isMobile ? 28 : 32, fontSize: isMobile ? 11 : 13 }}>{user?.name?.[0]?.toUpperCase() || 'U'}</div>
           <div style={{ minWidth: 0 }}>
-            <div style={s.userName}>{user?.name || 'User'}</div>
-            <div style={s.userEmail}>{user?.email?.slice(0,22)}…</div>
+            <div style={{ ...s.userName, fontSize: isMobile ? '0.78rem' : '0.82rem' }}>{user?.name || 'User'}</div>
+            <div style={{ ...s.userEmail, fontSize: isMobile ? '0.62rem' : '0.68rem' }}>{user?.email?.slice(0,22)}…</div>
           </div>
         </div>
         <button
-          style={{ ...s.logoutBtn, color: hoverLogout ? 'var(--red)' : 'var(--text-3)', borderColor: hoverLogout ? 'rgba(239,68,68,0.3)' : 'var(--border)' }}
+          style={{ ...s.logoutBtn, padding: isMobile ? '6px 10px' : s.logoutBtn.padding, fontSize: isMobile ? '0.75rem' : s.logoutBtn.fontSize, color: hoverLogout ? 'var(--red)' : 'var(--text-3)', borderColor: hoverLogout ? 'rgba(239,68,68,0.3)' : 'var(--border)' }}
           onClick={handleLogout}
           onMouseEnter={() => setHoverLogout(true)}
           onMouseLeave={() => setHoverLogout(false)}
@@ -157,8 +159,10 @@ export default function Sidebar() {
         )}
         <aside style={{
           ...s.sidebar,
+          width: 200,
           position: 'fixed', top: 0, left: 0, height: '100vh', zIndex: 999,
           minHeight: 'auto',
+          overflowY: 'auto',
           transform: mobileOpen ? 'translateX(0)' : 'translateX(-100%)',
           transition: 'transform 0.25s ease',
           boxShadow: mobileOpen ? '4px 0 24px rgba(0,0,0,0.3)' : 'none',

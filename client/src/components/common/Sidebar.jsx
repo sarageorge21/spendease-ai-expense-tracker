@@ -160,7 +160,7 @@ export default function Sidebar() {
         <aside style={{
           ...s.sidebar,
           width: 200,
-          position: 'fixed', top: 0, left: 0, height: '100vh', zIndex: 999,
+          position: 'fixed', top: 0, left: 0, height: '100dvh', zIndex: 999,
           minHeight: 'auto',
           overflowY: 'auto',
           transform: mobileOpen ? 'translateX(0)' : 'translateX(-100%)',

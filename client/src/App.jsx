@@ -14,9 +14,9 @@ import { Budgets, Goals, Recurring, Reports } from './pages/OtherPages';
 // Layout wrapper for authenticated pages
 function AppLayout() {
   return (
-    <div className="app-layout" style={{ height: '100vh', overflow: 'hidden', width: '100%' }}>
+    <div className="app-layout" style={{ height: '100dvh', overflow: 'hidden', width: '100%' }}>
       <Sidebar />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', minWidth: 0 }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100dvh', overflow: 'hidden', minWidth: 0 }}>
         <Header />
         <main className="main-content" style={{ flex: 1, overflowY: 'auto' }}>
           <Outlet />

@@ -124,7 +124,7 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div style={{ ...s.bottom, padding: isMobile ? '8px 8px' : s.bottom.padding }}>
+      <div style={{ ...s.bottom, padding: isMobile ? '8px 8px' : s.bottom.padding, marginTop: 'auto' }}>
         <div style={{ ...s.userWrap, padding: isMobile ? '8px 10px' : s.userWrap.padding }}
           onMouseEnter={e => e.currentTarget.style.background = 'var(--raised)'}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}

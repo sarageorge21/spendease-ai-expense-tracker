@@ -105,7 +105,7 @@ export default function Sidebar() {
         )}
       </div>
 
-      <nav style={{ ...s.nav, padding: isMobile ? '8px 8px' : s.nav.padding, gap: isMobile ? 1 : 2 }}>
+      <nav style={{ ...s.nav, padding: isMobile ? '8px 8px' : s.nav.padding, gap: isMobile ? 1 : 2, flex: isMobile ? 'none' : 1 }}>
         {NAV.map(({ to, icon, label }) => (
           <NavLink
             key={to} to={to}

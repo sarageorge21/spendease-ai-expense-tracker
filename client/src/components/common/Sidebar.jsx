@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 const NAV = [
@@ -63,18 +63,46 @@ const s = {
 export default function Sidebar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [hoverLogout, setHoverLogout] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  // Track screen size
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Listen for hamburger toggle from Header
+  useEffect(() => {
+    const handler = () => { if (isMobile) setMobileOpen(prev => !prev); };
+    window.addEventListener('toggle-sidebar', handler);
+    return () => window.removeEventListener('toggle-sidebar', handler);
+  }, [isMobile]);
+
+  // Close on navigation (mobile)
+  useEffect(() => {
+    if (isMobile) setMobileOpen(false);
+  }, [location.pathname, isMobile]);
 
   const handleLogout = () => { logout(); navigate('/'); };
 
-  return (
-    <aside style={s.sidebar}>
+  const sidebarContent = (
+    <>
       <div style={s.logo}>
         <div style={s.logoMark}>💸</div>
         <div>
           <div style={s.logoText}>Spendease</div>
           <div style={s.logoSub}>AI Finance Pro</div>
         </div>
+        {isMobile && (
+          <button
+            onClick={() => setMobileOpen(false)}
+            style={{ marginLeft: 'auto', background: 'transparent', color: 'var(--text-3)', fontSize: 20, padding: '4px 8px', borderRadius: 6, cursor: 'pointer', border: 'none' }}
+          >✕</button>
+        )}
       </div>
 
       <nav style={s.nav}>
@@ -114,6 +142,37 @@ export default function Sidebar() {
           🚪 Sign out
         </button>
       </div>
+    </>
+  );
+
+  // Mobile: overlay drawer
+  if (isMobile) {
+    return (
+      <>
+        {mobileOpen && (
+          <div
+            style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 998, backdropFilter: 'blur(2px)' }}
+            onClick={() => setMobileOpen(false)}
+          />
+        )}
+        <aside style={{
+          ...s.sidebar,
+          position: 'fixed', top: 0, left: 0, height: '100vh', zIndex: 999,
+          minHeight: 'auto',
+          transform: mobileOpen ? 'translateX(0)' : 'translateX(-100%)',
+          transition: 'transform 0.25s ease',
+          boxShadow: mobileOpen ? '4px 0 24px rgba(0,0,0,0.3)' : 'none',
+        }}>
+          {sidebarContent}
+        </aside>
+      </>
+    );
+  }
+
+  // Desktop: normal sticky sidebar
+  return (
+    <aside style={s.sidebar}>
+      {sidebarContent}
     </aside>
   );
 }

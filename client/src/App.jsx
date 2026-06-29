@@ -18,7 +18,7 @@ function AppLayout() {
       <Sidebar />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', minWidth: 0 }}>
         <Header />
-        <main className="main-content" style={{ flex: 1, overflowY: 'auto', padding: '28px 32px' }}>
+        <main className="main-content" style={{ flex: 1, overflowY: 'auto' }}>
           <Outlet />
         </main>
       </div>

@@ -10,6 +10,13 @@ export default function Header() {
   const [notifications, setNotifications] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Fetch notifications
   const fetchNotifications = async () => {
@@ -25,7 +32,7 @@ export default function Header() {
 
   useEffect(() => {
     fetchNotifications();
-    const interval = setInterval(fetchNotifications, 15000); // Poll every 15s
+    const interval = setInterval(fetchNotifications, 15000);
     return () => clearInterval(interval);
   }, []);
 
@@ -60,6 +67,10 @@ export default function Header() {
     }
   };
 
+  const handleToggleSidebar = () => {
+    window.dispatchEvent(new CustomEvent('toggle-sidebar'));
+  };
+
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const getTypeStyles = (type) => {
@@ -80,18 +91,23 @@ export default function Header() {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: '16px 32px',
+      padding: isMobile ? '12px 16px' : '16px 32px',
       background: 'var(--surface)',
       borderBottom: '1px solid var(--border)',
       position: 'sticky',
       top: 0,
       zIndex: 100,
       backdropFilter: 'blur(10px)',
+      gap: 12,
     },
     welcome: {
-      fontSize: '0.9rem',
+      fontSize: isMobile ? '0.8rem' : '0.9rem',
       fontWeight: 500,
       color: 'var(--text-2)',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      minWidth: 0,
     },
     boldName: {
       fontWeight: 700,
@@ -100,23 +116,39 @@ export default function Header() {
     actions: {
       display: 'flex',
       alignItems: 'center',
-      gap: '16px',
+      gap: isMobile ? '10px' : '16px',
       position: 'relative',
+      flexShrink: 0,
     },
     iconBtn: {
       background: 'var(--bg-2)',
       border: '1px solid var(--border-2)',
       borderRadius: '50%',
-      width: '40px',
-      height: '40px',
+      width: isMobile ? '36px' : '40px',
+      height: isMobile ? '36px' : '40px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontSize: '18px',
+      fontSize: isMobile ? '16px' : '18px',
       cursor: 'pointer',
       transition: 'all 0.2s',
       color: 'var(--text)',
       position: 'relative',
+      flexShrink: 0,
+    },
+    hamburger: {
+      background: 'var(--bg-2)',
+      border: '1px solid var(--border-2)',
+      borderRadius: 'var(--r-sm)',
+      width: '36px',
+      height: '36px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: '20px',
+      cursor: 'pointer',
+      color: 'var(--text)',
+      flexShrink: 0,
     },
     badge: {
       position: 'absolute',
@@ -138,7 +170,8 @@ export default function Header() {
       position: 'absolute',
       top: '50px',
       right: 0,
-      width: '320px',
+      width: isMobile ? 'calc(100vw - 32px)' : '320px',
+      maxWidth: '320px',
       background: 'var(--surface)',
       border: '1px solid var(--border-2)',
       borderRadius: 'var(--r-md)',
@@ -167,6 +200,7 @@ export default function Header() {
       fontWeight: 600,
       cursor: 'pointer',
       padding: 0,
+      border: 'none',
     },
     list: {
       display: 'flex',
@@ -229,8 +263,16 @@ export default function Header() {
 
   return (
     <header style={s.header}>
-      <div style={s.welcome}>
-        Welcome back, <span style={s.boldName}>{user?.name || 'User'}</span> 👋
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0, flex: 1 }}>
+        {/* Hamburger - mobile only */}
+        {isMobile && (
+          <button style={s.hamburger} onClick={handleToggleSidebar} title="Menu">
+            ☰
+          </button>
+        )}
+        <div style={s.welcome}>
+          Welcome back, <span style={s.boldName}>{user?.name || 'User'}</span> 👋
+        </div>
       </div>
 
       <div style={s.actions}>
@@ -239,8 +281,6 @@ export default function Header() {
           style={s.iconBtn}
           onClick={toggleTheme}
           title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-          onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
-          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
         >
           {theme === 'dark' ? '🌙' : '☀️'}
         </button>
@@ -251,8 +291,6 @@ export default function Header() {
             style={s.iconBtn}
             onClick={() => setIsOpen(!isOpen)}
             title="Notifications"
-            onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
-            onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
           >
             🔔
             {unreadCount > 0 && <div style={s.badge}>{unreadCount}</div>}

@@ -1,0 +1,21 @@
+{
+  "name": "spendease-pro",
+  "version": "1.0.0",
+  "description": "AI Personal Finance & Expense Intelligence Platform",
+  "main": "server/index.js",
+  "scripts": {
+    "install-server": "npm install --prefix server",
+    "install-client": "npm install --prefix client",
+    "build-client": "npm run build --prefix client",
+    "install-all": "npm run install-server && npm run install-client",
+    "build": "npm run install-all && npm run build-client",
+    "start": "node server/index.js",
+    "dev-server": "npm run dev --prefix server",
+    "dev-client": "npm run dev --prefix client"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -15,7 +15,10 @@ const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: 'Too ma
 app.use('/api/', limiter);
 
 // ── Middleware ───────────────────────────────────────────────
-app.use(cors({ origin: ['http://localhost:3000', 'http://localhost:5173'], credentials: true }));
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? [process.env.CLIENT_URL].filter(Boolean)
+  : ['http://localhost:3000', 'http://localhost:5173'];
+app.use(cors({ origin: allowedOrigins.length ? allowedOrigins : true, credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
